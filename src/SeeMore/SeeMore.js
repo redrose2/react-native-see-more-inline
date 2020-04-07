@@ -137,8 +137,11 @@ class SeeMore extends React.Component {
       numberOfLines,
       linkColor,
       linkPressedColor,
+      onPressMore,
       seeMoreText,
+      seeMoreTextStyle,
       seeLessText,
+      ...textProps
     } = this.props;
     const isTruncable = truncationIndex < text.length;
 
@@ -146,17 +149,18 @@ class SeeMore extends React.Component {
       <Text
         onLayout={isShowingMore ? undefined : this.onLayout}
         numberOfLines={isShowingMore ? undefined : numberOfLines}
+        {...textProps}
       >
-        <Text {...this.props}>{isShowingMore ? text : text.slice(0, truncationIndex)}</Text>
+        {isShowingMore ? text : text.slice(0, truncationIndex)}
         {isTruncable ? (
           <>
-            {isShowingMore ? null : <Text {...this.props}>...</Text>}
+            {isShowingMore ? null : '...  '}
             <Text
-              {...this.props}
-              {...this.panResponder.panHandlers}
-              style={{ color: isLinkPressed ? linkPressedColor : linkColor }}
+              {...!onPressMore && this.panResponder.panHandlers}
+              onPress={onPressMore}
+              style={seeMoreTextStyle || { color: isLinkPressed ? linkPressedColor : linkColor }}
             >
-              {isShowingMore ? ` ${seeLessText}` : ` ${seeMoreText}`}
+              {isShowingMore ? seeLessText : seeMoreText}
             </Text>
           </>
         ) : null}
