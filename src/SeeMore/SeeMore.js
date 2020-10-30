@@ -108,7 +108,9 @@ class SeeMore extends React.Component {
       children: text,
       linkColor,
       linkPressedColor,
+      onPressMore,
       seeMoreText,
+      seeMoreTextStyle,
       seeLessText,
       style,
     } = this.props;
@@ -119,27 +121,30 @@ class SeeMore extends React.Component {
     }
 
     return (
-      <Text
-        {...this.props}
-        {...this.panResponder.panHandlers}
-        style={[style, { color: isLinkPressed ? linkPressedColor : linkColor }]}
-      >
-        {isShowingMore ? null : <Text {...this.props}>...</Text>}
-        {isShowingMore ? ` ${seeLessText}` : ` ${seeMoreText}`}
-      </Text>
+      <>
+        {isShowingMore ? null : <Text {...this.props}>... </Text>}
+        <Text
+          {...this.props}
+          {...(!onPressMore && this.panResponder.panHandlers)}
+          onPress={onPressMore}
+          style={[style, seeMoreTextStyle, { color: isLinkPressed ? linkPressedColor : linkColor }]}
+        >
+          {isShowingMore ? seeLessText : seeMoreText}
+        </Text>
+      </>
     );
   }
 
   render() {
     const { isShowingMore, truncationIndex } = this.state;
-    const { children: text, numberOfLines } = this.props;
+    const { children: text, numberOfLines, onPressMore } = this.props;
 
     return (
       <Text
         testID="SeeMore"
         onLayout={isShowingMore ? undefined : this.onLayout}
         numberOfLines={isShowingMore ? undefined : numberOfLines}
-        {...this.panResponder.panHandlers}
+        {...(!onPressMore && this.panResponder.panHandlers)}
       >
         <Text {...this.props}>
           {isShowingMore ? text : text.slice(0, truncationIndex)}
